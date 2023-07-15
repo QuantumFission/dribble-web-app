@@ -1,4 +1,206 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+}
+
+.flexCenter {
+  @apply flex justify-center items-center;
+}
+
+.flexBetween {
+  @apply flex justify-between items-center;
+}
+
+.flexStart {
+  @apply flex items-center justify-start;
+}
+
+.flexEnd {
+  @apply flex items-center justify-end;
+}
+
+.text-small {
+  @apply text-sm font-medium;
+}
+
+.paddings {
+  @apply lg:px-20 py-6 px-5;
+}
+
+.not-allowed {
+  @apply cursor-not-allowed opacity-50;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 12px;
+}
+
+.modal-head-text {
+  @apply font-semibold text-xl md:text-2xl lg:text-3xl;
+}
+
+.no-result-text {
+  @apply w-full text-center py-[100px] px-2 text-4xl lg:text-5xl text-gray-500 font-bold;
+}
+
+/* Project Details */
+.user-actions_section {
+  @apply fixed max-md:hidden flex gap-4 flex-col right-10 top-20;
+}
+
+.user-info {
+  @apply flex flex-wrap whitespace-nowrap text-sm font-normal gap-2 w-full;
+}
+
+.project_sidebar-icons {
+  @apply w-10 h-10 border-2 border-gray-100 
+  hover:border-gray-200 flexCenter rounded-lg relative 
+   transition-all duration-200;
+}
+
+/* Home */
+.projects-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 min-[1350px]:grid-cols-4 gap-10;
+}
+
+/* Project Actions */
+.edit-action_btn {
+  @apply p-3 text-gray-100 bg-gray-400 rounded-lg text-sm font-medium;
+}
+
+.delete-action_btn {
+  @apply p-3 text-gray-100 hover:bg-red-600 rounded-lg text-sm font-medium;
+}
+
+/* Related Project Card */
+.related_project-card {
+  @apply flex-col rounded-2xl min-w-[210px] min-h-[197px];
+}
+
+.related_project-card_title {
+  @apply justify-end items-end w-full h-1/3 bg-gradient-to-b from-transparent to-black/50 rounded-b-2xl gap-2 absolute bottom-0 right-0 font-semibold text-lg text-white p-4;
+}
+
+.related_projects-grid {
+  @apply grid xl:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-8 mt-5;
+}
+
+/* Custom Menu */
+.custom_menu-btn {
+  @apply gap-4 w-full rounded-md border-2 border-gray-200 p-3 font-semibold outline-none capitalize;
+}
+
+.custom_menu-items {
+  @apply flex-col absolute left-0 mt-2 sm:min-w-[300px] w-fit max-h-64 origin-top-right rounded-xl bg-white border border-gray-100 shadow-md overflow-y-auto;
+}
+
+.custom_menu-item {
+  @apply text-left w-full px-5 py-2 text-sm hover:bg-gray-100 self-start whitespace-nowrap capitalize;
+}
+
+/* Footer */
+.footer {
+  @apply flex-col paddings w-full gap-20 bg-gray-50;
+}
+
+.footer_copyright {
+  @apply max-sm:flex-col w-full text-sm font-normal;
+}
+
+.footer_column {
+  @apply flex-1 flex flex-col gap-3 text-sm min-w-max;
+}
+
+/* Project Form  */
+
+.project_form-btn-cancel {
+  @apply p-3 bg-white text-c-dark border-2 border-gray-200/70 hover:border-gray-200 rounded-lg font-bold text-sm transition-all duration-200;
+}
+
+.project_form-btn-draft {
+  @apply p-3 bg-gray-100 hover:bg-gray-200 text-c-dark rounded-lg font-bold text-sm transition-all duration-200;
+}
+
+.project_form-btn-publish {
+  @apply p-3 bg-rose-500/90 hover:bg-rose-400 text-white rounded-lg font-bold text-sm transition-all duration-200;
+}
+
+.project_form-btn-cross {
+  @apply bg-gray-100 hover:bg-gray-200 transition-all duration-200 rounded-full p-2 cursor-pointer absolute;
+}
+
+.project_form-multi-img {
+  @apply w-full grid grid-cols-2 gap-4;
+}
+
+.project_form-single-img {
+  @apply w-full grid grid-cols-1 gap-4;
+}
+
+/* Form Field */
+.form_field-input-main {
+  @apply w-full outline-0 border-b-2 border-gray-200 p-6 font-bold text-3xl;
+}
+
+.form_field-input {
+  @apply w-full outline-0 border-b-2 border-gray-200 p-4;
+}
+
+.form_field-textarea {
+  @apply w-full outline-0 border-b-2 border-gray-200 p-4;
+}
+
+/* Modal */
+.modal {
+  @apply fixed z-50 left-0 right-0 top-0 bottom-0 mx-auto bg-black/80;
+}
+
+.modal_wrapper {
+  @apply flex justify-start items-center flex-col absolute h-[95%] w-full bottom-0 bg-white rounded-t-3xl lg:px-40 px-8 pt-14 pb-72 overflow-auto;
+}
+
+/* Navbar */
+.navbar {
+  @apply py-6 px-10 gap-4;
+}
+
+/* Profile Menu */
+.profile_menu-items {
+  @apply flex-col mt-3 p-7 sm:w-[200px] rounded-xl bg-white border border-gray-100 shadow-md absolute right-1/2 transform xl:translate-x-2;
+}
+
+/* Project Card */
+
+.project_card-title-parent {
+  @apply bg-transparent w-full h-full absolute top-0 flex items-end rounded-lg;
+}
+
+.project_card-title {
+  @apply flex justify-between items-center w-full h-1/3 bg-gradient-to-b from-transparent to-black/30 font-semibold text-lg text-white px-4 py-6 rounded-lg;
+}
+
+.project_card-title-icon {
+  @apply w-9 h-9 bg-gray-100 rounded-lg flex justify-center items-center relative
+}
+
+/* Profile Projects */
+.profile_projects {
+  @apply grid xl:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-8 mt-5;
+}
