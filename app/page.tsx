@@ -13,7 +13,6 @@ export default async function Home() {
       <>
         <Navbar />
         <section className=' flexStart flex-col paddings'>
-          {/* <Categories /> */}
           <p className='no-result-text text-center'>
             No projects found, create some first.
           </p>

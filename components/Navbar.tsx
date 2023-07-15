@@ -2,15 +2,13 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { NavLinks } from "@/constants";
-import AuthProviders from "./AuthProviders";
 import NavSearch from "./NavSearch";
-import ProfileMenu from "./ProfileMenu";
-import { getCurrentUser } from "@/lib/session";
 import Button from "./Button";
 import { ToolTip } from "./ui/tooltip";
 
+
 export default async function Navbar() {
-  const session = await getCurrentUser();
+  const session = null;
 
   return (
     <nav className=' flexBetween navbar'>
@@ -28,12 +26,10 @@ export default async function Navbar() {
         </Link>
         <ul className=' xl:flex hidden text-sm gap-7'>
           {NavLinks.map((link) => (
-            <Link
-              href={link.href}
-              key={link.key}
-              className=" group relative"
-            >
-              <span className=" text-c-dark text-sm font-semibold">{link.text}</span>
+            <Link href={link.href} key={link.key} className=' group relative'>
+              <span className=' text-c-dark text-sm font-semibold'>
+                {link.text}
+              </span>
               <ToolTip tip={link.text} />
             </Link>
           ))}
@@ -49,10 +45,14 @@ export default async function Navbar() {
                 className=' text-white bg-c-dark hover:bg-[#565564] font-semibold hidden md:flex'
               />
             </Link>
-            <ProfileMenu session={session} />
           </>
         ) : (
-          <AuthProviders />
+          <>
+            <Button
+              title='Sign In'
+              className=' bg-purple-500 text-white font-semibold'
+            />
+          </>
         )}
       </div>
     </nav>
