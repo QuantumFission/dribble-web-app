@@ -1,12 +1,15 @@
-import { NextAuthOptions, User, getServerSession } from "next-auth";
+import {
+  NextAuthOptions,
+  User,
+  Account,
+  Session,
+  DefaultSession,
+} from "next-auth";
 import { AdapterUser } from "next-auth/adapters";
 import GoogleProvider from "next-auth/providers/google";
-import jsonwebtoken from "jsonwebtoken";
+import { db } from "@/firebase/firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { JWT } from "next-auth/jwt";
-
-
-import { SessionInterface, UserProfile } from "@/common.types";
-import { createUser, getUser, serverUrl } from "./actions";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -15,69 +18,57 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
-  jwt: {
-    encode: ({ secret, token }) => {
-      const encodedToken = jsonwebtoken.sign({
-        ...token,
-        iss: 'grafbase',
-        exp: Math.floor(Date.now() / 1000) + 60 * 60
-      }, secret)
-      return encodedToken;
-    },
-    decode: async ({ secret, token }) => {
-      const decodedToken = jsonwebtoken.verify(token!, secret) as JWT;
-      return decodedToken;
-    } 
-  },
-  theme: {
-    colorScheme: "light",
-    logo: "/logo.png",
-  },
   secret: process.env.NEXT_PUBLIC_SECRET,
   callbacks: {
-    async session({ session }) {
-      const email = session?.user?.email as string;
+    async signIn({
+      user,
+      account,
+      profile,
+    }: {
+      user: User | AdapterUser;
+      account: Account | null;
+      profile?: any;
+    }): Promise<string | boolean> {
+      // console.log(user);
+      // console.log(account);
+      // console.log(profile);
+        const userDetails = {
+        id: user?.id,
+        name: user?.name,
+        email: user?.email,
+        image: user?.image,
+        description: "",
+        githubUrl: "",
+        linkedInUrl: "",
+      };
       try {
-        const data = await getUser(email) as { user?: UserProfile }
-
-        const newSession = {
-          ...session,
-          user: {
-            ...session.user,
-            ...data?.user
-          }
+        const userCollectionRef = doc(db, "userCollection", user?.id);
+        const isUser = await getDoc(userCollectionRef);
+        if(isUser.exists()) {
+          console.log(true);
+        } else {
+          await setDoc(userCollectionRef, userDetails);
         }
-        return newSession;
       } catch (error) {
-        console.log('Error retrieving user data', error);
-        return session;
+        console.log(error);
+      } finally {
+        return Promise.resolve(true);
       }
     },
-    async signIn({ user }: { user: AdapterUser | User }) {
-      try {
-        const userExists = (await getUser(user?.email as string)) as {
-          user?: UserProfile;
-        };
+    async jwt({ token }: { token: JWT }): Promise<JWT> {
+      return token;
+    },
+    async session({ session, token }: {
+      session: Session;
+      token: JWT;
+    }): Promise<Session | DefaultSession> {
 
-        if (!userExists.user) {
-          await createUser(
-            user.name as string,
-            user.email as string,
-            user.image as string
-          );
-        }
+      const newSession = {
+        ...session,
+        user: { ...session.user, id: token.sub },
+      };
 
-        return true;
-      } catch (error: any) {
-        console.log(error);
-        return false;
-      }
+      return newSession;
     },
   },
 };
-
-export async function getCurrentUser() {
-  const session = await getServerSession(authOptions) as SessionInterface;
-
-  return session;
-}

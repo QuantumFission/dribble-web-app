@@ -5,10 +5,16 @@ import { NavLinks } from "@/constants";
 import NavSearch from "./NavSearch";
 import Button from "./Button";
 import { ToolTip } from "./ui/tooltip";
-
+import { authOptions } from "@/lib/session";
+import { getServerSession } from "next-auth";
+import AuthProviders from "./AuthProviders";
+import ProfileMenu from "./ProfileMenu";
+import { SessionInterface } from "@/common.types";
 
 export default async function Navbar() {
-  const session = null;
+
+  const session = (await getServerSession(authOptions)) as SessionInterface;
+
 
   return (
     <nav className=' flexBetween navbar'>
@@ -45,13 +51,11 @@ export default async function Navbar() {
                 className=' text-white bg-c-dark hover:bg-[#565564] font-semibold hidden md:flex'
               />
             </Link>
+            <ProfileMenu session={session} />
           </>
         ) : (
           <>
-            <Button
-              title='Sign In'
-              className=' bg-purple-500 text-white font-semibold'
-            />
+            <AuthProviders />
           </>
         )}
       </div>
