@@ -183,7 +183,7 @@ body {
 
 /* Profile Menu */
 .profile_menu-items {
-  @apply flex-col mt-3 p-7 sm:w-[200px] rounded-xl bg-white border border-gray-100 shadow-md absolute right-1/2 transform xl:translate-x-2;
+  @apply flex-col mt-3 p-7 w-[200px] sm:w-[280px] rounded-xl bg-white border border-gray-100 shadow-md absolute right-1/2 transform xl:translate-x-2;
 }
 
 /* Project Card */
