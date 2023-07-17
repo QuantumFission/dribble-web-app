@@ -9,6 +9,14 @@ export type UserDetails = {
   linkedInUrl: string | null;
 }
 
+export type AuthFormState = {
+  id: string;
+  name: string;
+  username: string;
+  email: string;
+  password: string;
+}
+
 export type SessionInterface = {
   user: {
     id: string

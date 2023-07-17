@@ -40,6 +40,8 @@ export const authOptions: NextAuthOptions = {
         description: "",
         githubUrl: "",
         linkedInUrl: "",
+        password: "",
+        username: ""
       };
       try {
         const userCollectionRef = doc(db, "userCollection", user?.id);
