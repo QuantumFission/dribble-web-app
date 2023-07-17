@@ -60,6 +60,18 @@ body {
   @apply w-full text-center py-[100px] px-2 text-4xl lg:text-5xl text-gray-500 font-bold;
 }
 
+/* login-signUp  */
+
+.authform_inputfield {
+  @apply  bg-gray-100 p-2 rounded-lg w-full focus:outline-blue-200 outline-none
+  hover:outline-4 hover:outline hover:outline-blue-200 transition-all duration-100 hover:bg-white focus:bg-white focus:outline-4 text-sm
+}
+
+.authform_inputfield_invalid {
+  @apply  bg-white outline outline-4 outline-rose-300 p-2 rounded-lg w-full focus:outline-blue-200
+  hover:outline-4 hover:outline hover:outline-blue-200 transition-all duration-100 hover:bg-white focus:bg-white focus:outline-4 text-sm
+}
+
 /* Project Details */
 .user-actions_section {
   @apply fixed max-md:hidden flex gap-4 flex-col right-10 top-20;
