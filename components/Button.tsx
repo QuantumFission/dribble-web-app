@@ -1,8 +1,9 @@
 import { MouseEventHandler } from "react";
 
 type Props = {
-  title: string;
+  title?: string;
   leftIcon?: React.ReactNode;
+  midIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   handleClick?: MouseEventHandler;
   notAllowed?: boolean | false;
@@ -13,6 +14,7 @@ type Props = {
 const Button = ({
   title,
   leftIcon,
+  midIcon,
   rightIcon,
   handleClick,
   notAllowed,
@@ -28,7 +30,8 @@ const Button = ({
     }`}
   >
     {leftIcon && leftIcon}
-    {title}
+    {title && title}
+    {midIcon && midIcon}
     {rightIcon && rightIcon}
   </button>
 );
