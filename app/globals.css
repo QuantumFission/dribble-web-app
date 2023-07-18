@@ -64,7 +64,7 @@ body {
 
 .authform_inputfield {
   @apply  bg-gray-100 p-2 rounded-lg w-full focus:outline-blue-200 outline-none
-  hover:outline-4 hover:outline hover:outline-blue-200 transition-all duration-100 hover:bg-white focus:bg-white focus:outline-4 text-sm
+  hover:outline-4 hover:outline hover:outline-blue-200 transition-all duration-300 hover:bg-white focus:bg-white focus:outline-4 text-sm
 }
 
 .authform_inputfield_invalid {
