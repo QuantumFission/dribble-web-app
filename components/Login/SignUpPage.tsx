@@ -31,7 +31,7 @@ export default function SignUpPage() {
     formState: { errors },
   } = useForm<SignUpFormState>();
 
-  const [isMail, setIsMail] = useState<boolean>(true);
+  const [isMail, setIsMail] = useState<boolean>(false);
   const [password, setPassword] = useState<string>("");
   const [checkbox, setCheckbox] = useState<boolean>(false);
   const [invalid, setInvalid] = useState<boolean>(false);
