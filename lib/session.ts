@@ -5,19 +5,74 @@ import {
   Session,
   DefaultSession,
   getServerSession,
+  RequestInternal,
 } from "next-auth";
 import { AdapterUser } from "next-auth/adapters";
 import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider, {
+  CredentialInput,
+  CredentialsConfig,
+} from "next-auth/providers/credentials";
 import { db } from "@/firebase/firebase";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 import { JWT } from "next-auth/jwt";
-import { SessionInterface } from "@/common.types";
+import { SessionInterface, UserDetails } from "@/common.types";
+import { NextApiRequest, NextApiResponse } from "next";
+import { UserValidate, isUserAvailable } from "./validate";
+import { compare } from "bcryptjs";
+import { createNewUser } from "@/firebase/actions";
 
 export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
+    CredentialsProvider({
+      id: "credentials",
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "text" },
+        password: { label: "password", type: "password" },
+      },
+      async authorize(
+        credentials: Record<"email" | "password", string> | undefined,
+        req: Pick<RequestInternal, "body" | "query" | "headers" | "method">
+      ): Promise<any> {
+        if (!credentials) return;
+
+        const result = await isUserAvailable(credentials.email);
+
+        if (result) {
+          if (result.provider === "google") {
+            throw new Error(
+              "Please log in using your Google account to access your account."
+            );
+          } else {
+            // compare()
+            const checkPassword = await compare(
+              credentials.password,
+              result.password
+            );
+
+            // incorrect password
+            if (!checkPassword) {
+              throw new Error("Password doesn't match");
+            }
+            return result;
+          }
+        } else {
+          throw new Error("No account is associated with this email !");
+        }
+      },
     }),
   ],
   secret: process.env.NEXT_PUBLIC_SECRET,
@@ -30,56 +85,39 @@ export const authOptions: NextAuthOptions = {
       user: User | AdapterUser;
       account: Account | null;
       profile?: any;
-    }): Promise<string | boolean> {
-      // console.log(user);
-      // console.log(account);
-      // console.log(profile);
-        const userDetails = {
-        id: user?.id,
-        name: user?.name,
-        email: user?.email,
-        image: user?.image,
-        description: "",
-        githubUrl: "",
-        linkedInUrl: "",
-        password: "",
-        username: ""
-      };
-      try {
-        const userCollectionRef = doc(db, "userCollection", user?.id);
-        const isUser = await getDoc(userCollectionRef);
-        if(isUser.exists()) {
-          console.log(true);
+    }): Promise<boolean> {
+      // console.log("user", user);
+      // console.log("account", account);
+
+      if (account?.provider === "google") {
+        const isUser = await UserValidate(user.email);
+        if (isUser) {
+          return Promise.resolve(true);
         } else {
-          await setDoc(userCollectionRef, userDetails);
+          const userData = {
+            id: user.id,
+            name: user.name || "",
+            username: user.email || "",
+            email: user.email || "",
+            password: null,
+            image: user.image || "",
+            provider: "google",
+            description: "",
+            githubUrl: "",
+            linkedInUrl: "",
+          };
+          await createNewUser(userData);
+          return Promise.resolve(true);
         }
-      } catch (error) {
-        console.log(error);
-      } finally {
+      } else {
         return Promise.resolve(true);
       }
-    },
-    async jwt({ token }: { token: JWT }): Promise<JWT> {
-      return token;
-    },
-    async session({ session, token }: {
-      session: Session;
-      token: JWT;
-    }): Promise<Session | DefaultSession> {
-
-      const newSession = {
-        ...session,
-        user: { ...session.user, id: token.sub },
-      };
-
-      return newSession;
     },
   },
 };
 
-
 export async function getCurrentUser() {
-  const session = await getServerSession(authOptions) as SessionInterface;
+  const session = (await getServerSession(authOptions)) as SessionInterface;
 
   return session;
 }
