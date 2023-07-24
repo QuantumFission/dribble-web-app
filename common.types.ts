@@ -1,13 +1,22 @@
-
 export type UserDetails = {
   id: string;
   name: string;
+  username: string;
   email: string;
-  description: string | null;
+  password: string | null;
   image: string;
+  provider: string;
+  description: string | null;
   githubUrl: string | null;
   linkedInUrl: string | null;
-}
+};
+
+export type SignUpFormState = {
+  name: string;
+  username: string;
+  email: string;
+  password: string;
+};
 
 export type AuthFormState = {
   id: string;
@@ -15,16 +24,16 @@ export type AuthFormState = {
   username: string;
   email: string;
   password: string;
-}
+};
 
 export type SessionInterface = {
   user: {
-    id: string
-    name: string
-    email: string
-    image: string
-  }
-}
+    id: string;
+    name: string;
+    email: string;
+    image: string;
+  };
+};
 
 export type FormState = {
   title: string;

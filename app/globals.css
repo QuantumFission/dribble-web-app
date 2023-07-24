@@ -60,16 +60,23 @@ body {
   @apply w-full text-center py-[100px] px-2 text-4xl lg:text-5xl text-gray-500 font-bold;
 }
 
-/* login-signUp  */
+/* login-signUp-form  */
 
 .authform_inputfield {
-  @apply  bg-gray-100 p-2 rounded-lg w-full focus:outline-blue-200 outline-none
-  hover:outline-4 hover:outline hover:outline-blue-200 transition-all duration-300 hover:bg-white focus:bg-white focus:outline-4 text-sm
+  @apply bg-gray-100 p-2 rounded-lg w-full focus:outline-blue-200 outline-none
+  hover:outline-4 hover:outline hover:outline-blue-200 transition-all duration-300 hover:bg-white focus:bg-white focus:outline-4 text-sm;
+}
+.authform_inputfield_password {
+  @apply bg-gray-100 py-2 pr-14 pl-2 rounded-lg w-full focus:outline-blue-200 outline-none hover:outline-4 hover:outline hover:outline-blue-200 transition-all duration-300 hover:bg-white focus:bg-white focus:outline-4 text-sm;
 }
 
 .authform_inputfield_invalid {
-  @apply  bg-white outline outline-4 outline-rose-300 p-2 rounded-lg w-full focus:outline-blue-200
-  hover:outline-4 hover:outline hover:outline-blue-200 transition-all duration-100 hover:bg-white focus:bg-white focus:outline-4 text-sm
+  @apply bg-white outline outline-4 outline-rose-300 py-2 pr-14 pl-2 
+  rounded-lg w-full focus:outline-blue-200 hover:outline-4 hover:outline hover:outline-blue-200 transition-all duration-100 hover:bg-white focus:bg-white focus:outline-4 text-sm;
+}
+
+.authform_input-lable {
+  @apply font-bold text-c-dark text-sm flex items-center w-full;
 }
 
 /* Project Details */
@@ -209,7 +216,7 @@ body {
 }
 
 .project_card-title-icon {
-  @apply w-9 h-9 bg-gray-100 rounded-lg flex justify-center items-center relative
+  @apply w-9 h-9 bg-gray-100 rounded-lg flex justify-center items-center relative;
 }
 
 /* Profile Projects */
