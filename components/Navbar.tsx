@@ -12,7 +12,7 @@ import { SessionInterface } from "@/common.types";
 export default async function Navbar({
   session,
 }: {
-  session: SessionInterface;
+  session: SessionInterface | null;
 }) {
   return (
     <nav className=" flexBetween navbar">
