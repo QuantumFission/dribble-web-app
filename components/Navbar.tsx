@@ -5,15 +5,15 @@ import { NavLinks } from "@/constants";
 import NavSearch from "./NavSearch";
 import Button from "./Button";
 import { ToolTip } from "./ui/tooltip";
-import { getCurrentUser } from "@/lib/session";
 import AuthProviders from "./AuthProviders";
 import ProfileMenu from "./ProfileMenu";
+import { SessionInterface } from "@/common.types";
 
-export default async function Navbar() {
-  const session = await getCurrentUser();
-
-  console.log(session);
-
+export default async function Navbar({
+  session,
+}: {
+  session: SessionInterface;
+}) {
   return (
     <nav className=" flexBetween navbar">
       <div className=" flex-1 flexStart gap-10 relative">

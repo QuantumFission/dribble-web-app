@@ -1,31 +1,45 @@
+import Categories from "@/components/Categories";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-
-export const dynamic = "force-dynamic";
-export const dynamicParams = true;
-export const revalidate = 0;
+import ProjectCard from "@/components/ProjectCard";
+import { getAllProjects } from "@/firebase/actions";
+import { getCurrentUser } from "@/lib/session";
 
 export default async function Home() {
-  const projectsToDisplay = [] as string[];
-
-  if (projectsToDisplay.length === 0) {
-    return (
-      <>
-        <Navbar />
-        <section className=' flexStart flex-col paddings'>
-          <p className='no-result-text text-center'>
-            No projects found, create some first.
-          </p>
-        </section>
-        <Footer />
-      </>
-    );
-  }
+  const projectsToDisplay = await getAllProjects();
+  const session = await getCurrentUser();
 
   return (
     <>
-      <Navbar />
-      <div>hiiii</div>
+      <Navbar session={session} />
+      {projectsToDisplay?.length === 0 ? (
+        <section className=" flexStart flex-col paddings">
+          <p className="no-result-text text-center">
+            No projects found, create some first.
+          </p>
+        </section>
+      ) : (
+        <section className=" flex-start flex-col paddings mb-16">
+          <Categories />
+
+          <section className="w-full flex justify-center items-center mt-10">
+            <div className="projects-grid">
+              {projectsToDisplay?.map((project) => {
+                return (
+                  <ProjectCard
+                    key={project?.id}
+                    id={project?.id}
+                    title={project?.title}
+                    images={project?.images}
+                    mail={project?.email}
+                    session={session}
+                  />
+                );
+              })}
+            </div>
+          </section>
+        </section>
+      )}
       <Footer />
     </>
   );

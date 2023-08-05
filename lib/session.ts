@@ -2,30 +2,14 @@ import {
   NextAuthOptions,
   User,
   Account,
-  Session,
-  DefaultSession,
   getServerSession,
   RequestInternal,
 } from "next-auth";
 import { AdapterUser } from "next-auth/adapters";
 import GoogleProvider from "next-auth/providers/google";
-import CredentialsProvider, {
-  CredentialInput,
-  CredentialsConfig,
-} from "next-auth/providers/credentials";
-import { db } from "@/firebase/firebase";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  setDoc,
-  where,
-} from "firebase/firestore";
-import { JWT } from "next-auth/jwt";
-import { SessionInterface, UserDetails } from "@/common.types";
-import { NextApiRequest, NextApiResponse } from "next";
+import CredentialsProvider from "next-auth/providers/credentials";
+
+import { SessionInterface } from "@/common.types";
 import { UserValidate, isUserAvailable } from "./validate";
 import { compare } from "bcryptjs";
 import { createNewUser } from "@/firebase/actions";
@@ -65,7 +49,7 @@ export const authOptions: NextAuthOptions = {
 
             // incorrect password
             if (!checkPassword) {
-              throw new Error("Password doesn't match");
+              throw new Error("Password is wrong !");
             }
             return result;
           }
