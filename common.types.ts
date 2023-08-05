@@ -28,7 +28,6 @@ export type AuthFormState = {
 
 export type SessionInterface = {
   user: {
-    id: string;
     name: string;
     email: string;
     image: string;
@@ -45,19 +44,14 @@ export type FormState = {
 };
 
 export interface ProjectInterface {
+  id: string;
+  email: string;
   title: string;
   description: string;
   images: string[];
   liveSiteUrl: string;
   githubUrl: string;
   category: string;
-  id: string;
-  createdBy: {
-    name: string;
-    email: string;
-    avatarUrl: string;
-    id: string;
-  };
 }
 
 export interface ProjectForm {
@@ -68,3 +62,8 @@ export interface ProjectForm {
   githubUrl: string;
   category: string;
 }
+
+export type projectMetadata = {
+  projectTitle: string;
+  createdBy: string;
+};
