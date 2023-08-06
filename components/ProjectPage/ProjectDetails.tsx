@@ -25,7 +25,7 @@ import { TbLivePhoto } from "react-icons/tb";
 
 type Props = {
   project: ProjectInterface;
-  session: SessionInterface;
+  session: SessionInterface | null;
 };
 
 export default function ProjectDetails({ project, session }: Props) {

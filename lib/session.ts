@@ -100,8 +100,16 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
-export async function getCurrentUser() {
-  const session = (await getServerSession(authOptions)) as SessionInterface;
-
-  return session;
+export async function getCurrentUser(): Promise<SessionInterface | null> {
+  try {
+    const session = (await getServerSession(authOptions)) as SessionInterface;
+    if (session) {
+      return session;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 }

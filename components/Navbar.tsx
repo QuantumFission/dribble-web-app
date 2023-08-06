@@ -9,11 +9,11 @@ import AuthProviders from "./AuthProviders";
 import ProfileMenu from "./ProfileMenu";
 import { SessionInterface } from "@/common.types";
 
-export default async function Navbar({
-  session,
-}: {
+type Props = {
   session: SessionInterface | null;
-}) {
+};
+
+export default async function Navbar({ session }: Props) {
   return (
     <nav className=" flexBetween navbar">
       <div className=" flex-1 flexStart gap-10 relative">

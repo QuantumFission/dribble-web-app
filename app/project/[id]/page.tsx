@@ -19,7 +19,7 @@ export default async function Project({ params: { id } }: Props) {
   if (!project) {
     return (
       <>
-        <Navbar />
+        <Navbar session={session} />
         <div className=" flex flex-col gap-3 w-full py-[180px] flexCenter">
           <h2 className=" text-gray-600 font-bold text-4xl">
             Failed to fetch project information

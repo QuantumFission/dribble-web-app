@@ -11,7 +11,7 @@ import { ToolTip } from "../ui/tooltip";
 
 type Props = {
   project: ProjectInterface;
-  session: SessionInterface;
+  session: SessionInterface | null;
 };
 
 export default function ProjectModal({ project, session }: Props) {
