@@ -23,7 +23,7 @@ type Props = {
   title: string;
   images: string[];
   mail: string;
-  session: SessionInterface;
+  session: SessionInterface | null;
 };
 
 export default function ProjectCard({

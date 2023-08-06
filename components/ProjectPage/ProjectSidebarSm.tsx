@@ -18,7 +18,7 @@ import Link from "next/link";
 
 type Props = {
   project: ProjectInterface;
-  session: SessionInterface;
+  session: SessionInterface | null;
   user: UserDetails | null;
 };
 
