@@ -22,7 +22,7 @@ type Props = {
   id: string;
   title: string;
   images: string[];
-  mail: string;
+  userId: string | null;
   session: SessionInterface | null;
 };
 
@@ -30,18 +30,20 @@ export default function ProjectCard({
   id,
   title,
   images,
-  mail,
+  userId,
   session,
 }: Props) {
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    const getUserData = async () => {
-      const user = await getUserDetails(mail);
+    const getUserData = async (id: string) => {
+      const user = await getUserDetails(id);
       setUser(user);
     };
-    getUserData();
-  }, [mail]);
+    if (userId) {
+      getUserData(userId);
+    }
+  }, []);
 
   function handleLikeClick(e: React.MouseEvent<HTMLDivElement>) {
     preventBubbling()(e);
@@ -101,7 +103,7 @@ export default function ProjectCard({
       <div className="w-full flex justify-between items-center">
         <div className="flex items-center gap-2">
           {user ? (
-            <Link href={`/profile/${user.email}`}>
+            <Link href={`/profile/${userId}`}>
               <div className=" w-full h-[24px] cursor-pointer group relative">
                 <UserProfile src={user.image} width={24} height={24} />
                 <ToolTip tip={user.name} />
@@ -111,7 +113,7 @@ export default function ProjectCard({
             <div className=" w-[24px] h-[24px] bg-gray-200 animate-pulse rounded-full" />
           )}
           {user && (
-            <Link href={`/profile/${user.email}`}>
+            <Link href={`/profile/${userId}`}>
               <span className=" text-sm font-bold text-c-dark">
                 {FormattedTag(user.name)}
               </span>

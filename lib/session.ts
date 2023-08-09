@@ -4,15 +4,22 @@ import {
   Account,
   getServerSession,
   RequestInternal,
+  Session,
+  DefaultSession,
 } from "next-auth";
 import { AdapterUser } from "next-auth/adapters";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 import { SessionInterface } from "@/common.types";
-import { UserValidate, isUserAvailable } from "./validate";
+import {
+  UserValidate,
+  UserValidateWithMail,
+  isUserAvailable,
+} from "./validate";
 import { compare } from "bcryptjs";
 import { createNewUser } from "@/firebase/actions";
+import { JWT } from "next-auth/jwt";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -33,7 +40,7 @@ export const authOptions: NextAuthOptions = {
       ): Promise<any> {
         if (!credentials) return;
 
-        const result = await isUserAvailable(credentials.email);
+        const result = await UserValidateWithMail(credentials.email);
 
         if (result) {
           if (result.provider === "google") {
@@ -74,28 +81,56 @@ export const authOptions: NextAuthOptions = {
       // console.log("account", account);
 
       if (account?.provider === "google") {
-        const isUser = await UserValidate(user.email);
-        if (isUser) {
-          return Promise.resolve(true);
+        if (user.email) {
+          const isUser = await UserValidateWithMail(user.email);
+          if (isUser) {
+            return Promise.resolve(true);
+          } else {
+            const userData = {
+              id: user.id,
+              name: user.name || "",
+              username: user.email || "",
+              email: user.email || "",
+              password: null,
+              image: user.image || "",
+              provider: "google",
+              description: "",
+              githubUrl: "",
+              linkedInUrl: "",
+            };
+            await createNewUser(userData);
+            return Promise.resolve(true);
+          }
         } else {
-          const userData = {
-            id: user.id,
-            name: user.name || "",
-            username: user.email || "",
-            email: user.email || "",
-            password: null,
-            image: user.image || "",
-            provider: "google",
-            description: "",
-            githubUrl: "",
-            linkedInUrl: "",
-          };
-          await createNewUser(userData);
-          return Promise.resolve(true);
+          return Promise.reject();
         }
       } else {
         return Promise.resolve(true);
       }
+    },
+    async jwt({ token, account }) {
+      if (account) {
+        token.accessToken = account.access_token;
+      }
+      return token;
+    },
+    async session({
+      session,
+      token,
+      user,
+    }: {
+      session: any;
+      token: JWT;
+      user: AdapterUser;
+    }) {
+      if (token.accessToken) {
+        session.accessToken = token.accessToken;
+        session.user.id = token.sub;
+      } else {
+        session.accessToken = token.sub;
+        session.user.id = token.sub;
+      }
+      return session;
     },
   },
 };

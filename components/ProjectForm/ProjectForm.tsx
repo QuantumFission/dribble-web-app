@@ -1,32 +1,55 @@
 "use client";
 
 import { FormState, ProjectInterface, SessionInterface } from "@/common.types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "../Button";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import ProjectFormCreate from "./ProjectFormCreate";
 import ProjectFormEdit from "./ProjectFormEdit";
-import { createNewProject } from "@/firebase/actions";
+import {
+  createNewProject,
+  getProjectDetails,
+  updateProject,
+} from "@/firebase/actions";
 import { v4 as uuidv4 } from "uuid";
+import { FieldValue, serverTimestamp } from "firebase/firestore";
 
 type Props = {
   type: string;
   session: SessionInterface;
-  project?: ProjectInterface;
+  projectId?: string;
+  title?: string;
+  description?: string;
+  images?: string[];
+  liveSiteUrl?: string;
+  githubUrl?: string;
+  category?: string;
+  timestamp?: string | FieldValue;
 };
 
-export default function ProjectForm({ session, type, project }: Props) {
+export default function ProjectForm({
+  session,
+  type,
+  title,
+  description,
+  images,
+  liveSiteUrl,
+  githubUrl,
+  category,
+  projectId,
+  timestamp,
+}: Props) {
   const [submitting, setSubmitting] = useState<boolean>(false);
 
   // FORM
   const [form, setForm] = useState<FormState>({
-    title: project?.title || "",
-    description: project?.description || "",
-    images: project?.images || [],
-    liveSiteUrl: project?.liveSiteUrl || "",
-    githubUrl: project?.githubUrl || "",
-    category: project?.category || "",
+    title: title || "",
+    description: description || "",
+    images: images || [],
+    liveSiteUrl: liveSiteUrl || "",
+    githubUrl: githubUrl || "",
+    category: category || "",
   });
 
   const router = useRouter();
@@ -39,13 +62,22 @@ export default function ProjectForm({ session, type, project }: Props) {
     try {
       if (type === "create") {
         const id = uuidv4();
-        const updatedForm = { ...form, id: id, email: session?.user?.email };
+        const updatedForm = {
+          ...form,
+          id: id,
+          userId: session?.user?.id,
+          timestamp: serverTimestamp(),
+        };
         await createNewProject(updatedForm);
         setSubmitting(false);
+        router.prefetch("/");
         router.push("/");
       } else {
-        // await updateProject(form, project?.id as string)
-        // router.push("/")
+        if (projectId && timestamp) {
+          await updateProject(form, projectId, session.user.id, timestamp);
+        }
+        router.prefetch("/");
+        router.push("/");
       }
     } catch (error) {
       console.log(error);

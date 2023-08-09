@@ -1,13 +1,11 @@
 import { SyntheticEvent } from "react";
 
-
 export function preventBubbling() {
   return (e: SyntheticEvent): void => {
     e.stopPropagation();
     e.preventDefault();
   };
 }
-
 
 export function FormattedTag(string: string) {
   const tagLimit = 10;
@@ -18,13 +16,13 @@ export function FormattedTag(string: string) {
   return string;
 }
 
-export function FormattedString(string: string) {
+export function FormattedString(title: string) {
   const tagLimit = 13;
-  if (string.length > tagLimit) {
-    const shortTag = string.slice(0, tagLimit) + " ...";
+  if (title?.length > tagLimit) {
+    const shortTag = title.slice(0, tagLimit) + " ...";
     return shortTag;
   }
-  return string;
+  return title;
 }
 
 export function FormatNumber(num: number) {

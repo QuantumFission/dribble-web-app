@@ -16,7 +16,7 @@ const ProfileMenu = ({ session }: { session: SessionInterface }) => {
 
   useEffect(() => {
     const getData = async () => {
-      const user = await getUserDetails(session?.user?.email);
+      const user = await getUserDetails(session?.user?.id);
       setUser(user);
     };
     getData();
@@ -30,9 +30,7 @@ const ProfileMenu = ({ session }: { session: SessionInterface }) => {
           onMouseEnter={() => setOpenModal(true)}
         >
           {user?.image ? (
-            <Link href={`/profile/${user?.id}`} className=" w-10 h-10">
-              <UserProfile width={40} height={40} src={user?.image} />
-            </Link>
+            <UserProfile width={40} height={40} src={user?.image} />
           ) : (
             <div className=" w-10 h-10 bg-gray-200 animate-pulse rounded-full" />
           )}
@@ -55,7 +53,12 @@ const ProfileMenu = ({ session }: { session: SessionInterface }) => {
           >
             <div className="flex flex-col items-center gap-y-4">
               {user?.image && (
-                <UserProfile width={80} height={80} src={user?.image} />
+                <Link
+                  href={`/profile/${user?.id}`}
+                  className=" w-[80px] h-[80px]"
+                >
+                  <UserProfile width={80} height={80} src={user?.image} />
+                </Link>
               )}
               <Link href={`/profile/${user?.id}`}>
                 <p className="font-bold hover:text-gray-600 transition-all duration-200 cursor-pointer">

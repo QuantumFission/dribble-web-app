@@ -18,12 +18,12 @@ import UserProfile from "../ui/UserProfile";
 import Link from "next/link";
 
 type Props = {
-  project: ProjectInterface;
+  id?: string;
   session: SessionInterface | null;
   user: UserDetails | null;
 };
 
-export default function ProjectSidebarLg({ project, session, user }: Props) {
+export default function ProjectSidebarLg({ id, session, user }: Props) {
   return (
     <section className=" hidden lg:flex flex-col gap-4 absolute top-[70px] right-[40px]">
       {user && <UserProfile src={user?.image} width={40} height={40} />}
@@ -66,9 +66,9 @@ export default function ProjectSidebarLg({ project, session, user }: Props) {
         />
         <AiFillHeart size={18} className=" fill-c-dark" />
       </div>
-      {session?.user?.email === user?.email && (
+      {session?.user?.id === user?.id && (
         <Link
-          href={`/edit-project/${project?.id}`}
+          href={`/edit-project/${id}`}
           className="project_sidebar-icons relative group"
         >
           <ToolTipV2

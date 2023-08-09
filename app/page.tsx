@@ -1,4 +1,3 @@
-import { SessionInterface } from "@/common.types";
 import Categories from "@/components/Categories";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
@@ -9,8 +8,6 @@ import { getCurrentUser } from "@/lib/session";
 export default async function Home() {
   const projectsToDisplay = await getAllProjects();
   const session = await getCurrentUser();
-
-  console.log(session);
 
   return (
     <>
@@ -34,7 +31,7 @@ export default async function Home() {
                     id={project?.id}
                     title={project?.title}
                     images={project?.images}
-                    mail={project?.email}
+                    userId={project?.userId}
                     session={session}
                   />
                 );
