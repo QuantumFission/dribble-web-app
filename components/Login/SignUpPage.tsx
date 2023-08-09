@@ -6,7 +6,7 @@ import { SignUpFormState } from "@/common.types";
 import Link from "next/link";
 import Image from "next/image";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, where } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
 import { useRouter } from "next/navigation";
 import { motion as m } from "framer-motion";
@@ -18,6 +18,7 @@ import { hash } from "bcryptjs";
 // icons
 import { AiOutlineLeft, AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
+import { UserValidateWithMail, isUserAvailable } from "@/lib/validate";
 
 type ShowState = {
   password: boolean;
@@ -52,18 +53,18 @@ export default function SignUpPage() {
       } else {
         setInvalid(false);
         try {
-          const userRef = doc(db, "userCollection", data.email);
-          const querySnapshot = await getDoc(userRef);
-          if (querySnapshot.exists()) {
+          const userId = uuidv4();
+          const userRef = doc(db, "userCollection", userId);
+          const isUser = await UserValidateWithMail(data.email);
+          if (isUser) {
             setUserExists(true);
             return;
           } else {
             setUserExists(false);
-            console.log("no user");
             const hashPassword = await hash(data.password, 10);
             const updatedData = {
               ...data,
-              id: uuidv4(),
+              id: userId,
               password: hashPassword,
               image:
                 "https://img.freepik.com/free-vector/flat-creativity-concept-illustration_52683-64279.jpg",

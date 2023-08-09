@@ -1,3 +1,5 @@
+import { FieldValue } from "firebase/firestore";
+
 export type UserDetails = {
   id: string;
   name: string;
@@ -31,7 +33,9 @@ export type SessionInterface = {
     name: string;
     email: string;
     image: string;
+    id: string;
   };
+  accessToken: string;
 };
 
 export type FormState = {
@@ -45,13 +49,14 @@ export type FormState = {
 
 export interface ProjectInterface {
   id: string;
-  email: string;
+  userId: string;
   title: string;
   description: string;
   images: string[];
   liveSiteUrl: string;
   githubUrl: string;
   category: string;
+  timestamp: string | FieldValue;
 }
 
 export interface ProjectForm {

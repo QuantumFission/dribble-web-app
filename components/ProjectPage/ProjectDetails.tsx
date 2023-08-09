@@ -15,8 +15,8 @@ import ProjectActions from "./ProjectActions";
 import UserProfile from "../ui/UserProfile";
 import ProjectSidebarSm from "./ProjectSidebarSm";
 import ProjectSidebarLg from "./ProjectSidebarLg";
-import { getUserDetails } from "@/firebase/actions";
-// import RelatedProjects from "../RelatedProjects";
+import { getProjectDetails, getUserDetails } from "@/firebase/actions";
+import RelatedProjects from "../RelatedProjects";
 
 // icons
 import { BsDot } from "react-icons/bs";
@@ -24,22 +24,27 @@ import { AiFillHeart, AiFillGithub, AiFillInfoCircle } from "react-icons/ai";
 import { TbLivePhoto } from "react-icons/tb";
 
 type Props = {
-  project: ProjectInterface;
+  id: string;
   session: SessionInterface | null;
 };
 
-export default function ProjectDetails({ project, session }: Props) {
+export default function ProjectDetails({ id, session }: Props) {
+  const [project, setProject] = useState<ProjectInterface | null>(null);
   const [user, setUser] = useState<UserDetails | null>(null);
 
   useEffect(() => {
-    const getUser = async (mail: string) => {
-      const user = await getUserDetails(mail);
-      setUser(user);
+    const getProject = async (id: string) => {
+      const project = await getProjectDetails(id);
+      if (project?.userId) {
+        const user = await getUserDetails(project.userId);
+        setUser(user);
+      }
+      setProject(project);
     };
-    getUser(project?.email);
+    getProject(id);
   }, []);
 
-  const renderLink = () => `/profile/${project?.id}`;
+  const renderLink = () => `/profile/${project?.userId}`;
 
   return (
     <div className="px-4 py-16 lg:px-[120px] flex flex-col w-full h-full overflow-y-scroll bg-white gap-12">
@@ -81,11 +86,11 @@ export default function ProjectDetails({ project, session }: Props) {
       </section>
 
       {/* sidebar  */}
-      <ProjectSidebarSm session={session} project={project} user={user} />
-      <ProjectSidebarLg session={session} project={project} user={user} />
+      <ProjectSidebarSm session={session} id={id} user={user} />
+      <ProjectSidebarLg session={session} id={id} user={user} />
 
       {/* postImages */}
-      {project.images.length === 1 && (
+      {project && project.images && project.images.length === 1 && (
         <section className="w-full relative">
           <Image
             alt="project-img"
@@ -98,7 +103,7 @@ export default function ProjectDetails({ project, session }: Props) {
         </section>
       )}
 
-      {project.images.length != 1 && (
+      {project && project.images && project.images.length != 1 && (
         <section className="w-full relative">
           {project.images.slice(0, 1).map((image, index) => (
             <Image
@@ -115,10 +120,10 @@ export default function ProjectDetails({ project, session }: Props) {
       )}
 
       <section className="flexCenter flex-col">
-        <p className="max-w-5xl text-xl font-normal">{project.description}</p>
+        <p className="max-w-5xl text-xl font-normal">{project?.description}</p>
       </section>
 
-      {project.images.length != 1 && (
+      {project && project.images && project.images.length != 1 && (
         <section className="w-full relative flex flex-col gap-8">
           {project.images
             .slice(1, project.images.length)
@@ -136,41 +141,43 @@ export default function ProjectDetails({ project, session }: Props) {
         </section>
       )}
 
-      {session?.user?.email === project.email ? (
+      {session?.user?.id === project?.userId ? (
         <section className="flexCenter mt-10">
           <ProjectActions projectId={project?.id} />
         </section>
       ) : (
         <section className="flexCenter flex-col mt-10">
-          <div className="flex flex-wrap mt-5 gap-5 items-center">
-            <Link
-              href={project?.githubUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="flexCenter gap-2 tex-sm font-medium text-primary-purple"
-            >
-              <Button
-                title="GitHub"
-                className=" bg-c-dark hover:bg-gray-800 
-              text-white flex items-center gap-2 px-4"
-                leftIcon={<AiFillGithub size={20} />}
-              />
-            </Link>
-            <BsDot size={20} className=" fill-purple-400" />
-            <Link
-              href={project?.liveSiteUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="flexCenter gap-2 tex-sm font-medium text-primary-purple"
-            >
-              <Button
-                title="Live site"
-                className=" bg-purple-400 hover:bg-purple-500 
-              text-white flex items-center gap-2 px-4"
-                leftIcon={<TbLivePhoto size={20} />}
-              />
-            </Link>
-          </div>
+          {project?.githubUrl && project?.liveSiteUrl && (
+            <div className="flex flex-wrap mt-5 gap-5 items-center">
+              <Link
+                href={project?.githubUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="flexCenter gap-2 tex-sm font-medium text-primary-purple"
+              >
+                <Button
+                  title="GitHub"
+                  className=" bg-c-dark hover:bg-gray-800 
+                        text-white flex items-center gap-2 px-4"
+                  leftIcon={<AiFillGithub size={20} />}
+                />
+              </Link>
+              <BsDot size={20} className=" fill-purple-400" />
+              <Link
+                href={project?.liveSiteUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="flexCenter gap-2 tex-sm font-medium text-primary-purple"
+              >
+                <Button
+                  title="Live site"
+                  className=" bg-purple-400 hover:bg-purple-500 
+                        text-white flex items-center gap-2 px-4"
+                  leftIcon={<TbLivePhoto size={20} />}
+                />
+              </Link>
+            </div>
+          )}
         </section>
       )}
 
@@ -192,11 +199,9 @@ export default function ProjectDetails({ project, session }: Props) {
           <p className=" text-xl font-bold text-c-dark">{user?.name}</p>
         </div>
       </section>
-
-      {/* <RelatedProjects
-        userId={project?.createdBy?.id}
-        projectId={project?.id}
-      /> */}
+      {user?.id && (
+        <RelatedProjects userId={user.id} projectId={id} userName={user.name} />
+      )}
     </div>
   );
 }

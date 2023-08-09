@@ -4,17 +4,14 @@ import { Dialog, Transition } from "@headlessui/react";
 import { motion as m } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { Fragment } from "react";
-import ProjectDetails from "./ProjectDetails";
-import { ProjectInterface, SessionInterface } from "@/common.types";
 import { RxCross2 } from "react-icons/rx";
 import { ToolTip } from "../ui/tooltip";
 
 type Props = {
-  project: ProjectInterface;
-  session: SessionInterface | null;
+  children: React.ReactNode;
 };
 
-export default function ProjectModal({ project, session }: Props) {
+export default function ProjectModal({ children }: Props) {
   const isOpen = true;
   const router = useRouter();
 
@@ -49,7 +46,7 @@ export default function ProjectModal({ project, session }: Props) {
                       />
                     </div>
                   </div>
-                  <ProjectDetails project={project} session={session} />
+                  {children}
                 </Dialog.Panel>
               </m.div>
             </div>

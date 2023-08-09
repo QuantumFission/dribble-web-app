@@ -17,12 +17,12 @@ import { AiFillHeart, AiFillInfoCircle } from "react-icons/ai";
 import Link from "next/link";
 
 type Props = {
-  project: ProjectInterface;
+  id?: string;
   session: SessionInterface | null;
   user: UserDetails | null;
 };
 
-export default function ProjectSidebarSm({ project, session, user }: Props) {
+export default function ProjectSidebarSm({ id, session, user }: Props) {
   return (
     <m.section
       initial={{ opacity: 0 }}
@@ -57,9 +57,9 @@ export default function ProjectSidebarSm({ project, session, user }: Props) {
           <AiFillInfoCircle size={18} className=" fill-c-dark" />
           <ToolTip tip="shot details" className=" left-[-40px]" />
         </div>
-        {session?.user?.email === user?.email && (
+        {session?.user?.id === user?.id && (
           <Link
-            href={`/edit-project/${project?.id}`}
+            href={`/edit-project/${id}`}
             className="project_sidebar-icons relative group"
           >
             <HiPencil size={18} className=" fill-c-dark" />

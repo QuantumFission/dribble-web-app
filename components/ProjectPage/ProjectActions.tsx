@@ -5,10 +5,12 @@ import { useRouter } from "next/navigation";
 import Button from "../Button";
 import { deleteProject } from "@/firebase/actions";
 
-export default function ProjectActions({ projectId }: { projectId: string }) {
+export default function ProjectActions({ projectId }: { projectId?: string }) {
   const router = useRouter();
   const handleDelete = async () => {
-    await deleteProject(projectId);
+    if (projectId) {
+      await deleteProject(projectId);
+    }
     router.push("/");
   };
 
