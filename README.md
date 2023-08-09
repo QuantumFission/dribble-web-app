@@ -26,4 +26,4 @@ http://localhost:3000
 ```
 
 
-The project is live at - <a href="https://dribble-web-app.vercel.app/">Dribble Web App - Clone</a>
+The project is live at - <a href="https://dribble-web-app.vercel.app/" target="_blank">Dribble Web App - Clone</a>
