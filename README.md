@@ -1,4 +1,4 @@
-# Dribble Social
+# Drip Social
 
 I created this project as a part of my web development journey.
 
